@@ -1,5 +1,6 @@
 const express = require ("express");
 const mongoose = require ("mongoose");
+const morgan = require("morgran");
 
 const PORT = process.env.PORT || 3000;
 
@@ -18,6 +19,14 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", {
 });
 
 // routes
+
+app.get("/excerise", (req, res) => {
+    res.sendFile(path.join(_dirname + "/public/excerise.html"));
+});
+
+app.get("stats", (req, res) => {
+    res.sendFile(path.join(_dirname + "/public/stats.html"));
+});
 
 app.use(require("./routes/api.js"));
 
