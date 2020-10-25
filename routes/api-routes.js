@@ -20,3 +20,13 @@ router.put("/api/workouts/:id", ({body, params}, res) => {
             res.status(400).json(err);
         });
 });
+
+router.get("/api/workouts", (req, res) => {
+    Workout.find()
+        .then(data => {
+            res.json(data);
+        }).catch(err => {
+            res.status(400).json(err);
+        });
+});
+
