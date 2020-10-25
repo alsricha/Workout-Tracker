@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const Workout  = require("../models/workout.js");
+const db = require("../models");
 
 // Gets all previous workouts
 router.get('/api/workouts', (req, res) => {
