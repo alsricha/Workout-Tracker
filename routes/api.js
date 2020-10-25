@@ -1,52 +1,56 @@
 const router = require("express").Router();
 const Workout  = require("../models/workout.js");
 
-router.post("/api/workouts", (req, res) => {
-    Workout.create({})
-        .then(dbWorkout => {
-            res.json(dbworkout);
-        })
-        .catch(err => {
-            res.json(err);
-        });
-});
-
-router.put("/api/workouts/:id", ({body, params}, res) => {
-    Workout.findByIdAndUpdate(params.id, {$push: {excerise: body}},
-        // "runValidators" will ensure new excerises meet our schema requirements
-        {new: true, runValidators: true}
-        ).then(dbWorkout => {
-            res.json(dbWorkout);
-        }).catch(err => {
-            res.json(err);
-        });
-});
-
-router.get("/api/workouts", (req, res) => {
-    Workout.find()
-        .then(dbWorkouts => {
-            res.json(dbWorkouts);
-        }).catch(err => {
-            res.json(err);
-        });
-});
-
-router.get("/api/workouts/range", ({query}, res) => {
-    Workout.find().limit(7)
-        .then(dbWorkouts => {
-            res.json(dbWorkouts);
-        }).catch(err => {
-            res.json(err);
-        });
-});
-
-router.delete("/api/workouts", ({ body }, res) => {
-    Workout.findByIdAndDelete(body.id)
-        .then(() => {
-            res.json(dbWorkouts);
-        }).catch(err => {
-            res.json(err);
-        });
-});
-
-module.exports = router;
+// Gets all previous workouts
+router.get('/api/workouts', (req, res) => {
+    db.Workout.find({})
+      .then(dbWorkout => {
+        console.log(dbWorkout);
+        res.json(dbWorkout);
+      })
+      .catch(err => {
+        res.status(400).json(err);
+      });
+  });
+  
+  // Add user's new workout
+  router.post('/api/workouts', ({ body }, res) => {
+    db.Workout.create(body)
+      .then(dbWorkout => {
+        res.json(dbWorkout);
+      })
+      .catch(err => {
+        res.status(400).json(err);
+      });
+  });
+  
+  // PUT route for updating workout exercises by id
+  router.put('/api/workouts/:id', (req, res) => {
+    db.Workout.updateOne(
+      { _id: req.params.id },
+      { $push: { exercises: req.body } }
+    )
+      .then(dbWorkout => {
+        res.json(dbWorkout);
+      })
+      .catch(err => {
+        res.json(err);
+      });
+  });
+  // Get request for last 7 workouts
+  router.get('/api/workouts/range', (req, res) => {
+    // Organizes workouts by most recent first
+    db.Workout.find({})
+      .sort({ _id: -1 })
+      .limit(7)
+      .then(dbWorkout => {
+        console.log(dbWorkout);
+        res.json(dbWorkout);
+        console.log(dbWorkout);
+      })
+      .catch(err => {
+        res.json(err);
+      });
+  });
+  
+  module.exports = router;
